@@ -58,8 +58,7 @@ impl NewCommand {
             return Err(format!(
                 "The provided path for project '{}' does not point to a valid location",
                 self.name
-            )
-            .into());
+            ));
         }
 
         // Validation checks for the destination path
@@ -70,31 +69,30 @@ impl NewCommand {
             return Err(format!(
                 "Project name '{}' is a file. Please provide a directory name",
                 self.name
-            )
-            .into());
+            ));
         }
 
         // Check if it exists and a valid place to start
         if destination_path.exists() {
             // Check if it's a file
             if !destination_path.is_dir() {
-                return Err(format!("'{}' already exists and is a file", self.name).into());
+                return Err(format!("'{}' already exists and is a file", self.name));
             }
 
             // Check if creating new project in an existing workspace (package.json in destination path)
             // TODO: Might check for another significant file to determine if it's a current project/workspace? For example, Angular CLI checks for `angular.json`
             let package_json_path = destination_path.join("package.json");
             if package_json_path.exists() {
-                return Err(format!(
+                return Err(
                     "This command is not available when running the Lit CLI inside a workspace"
-                )
-                .into());
+                        .to_string(),
+                );
             }
 
             // Check if directory is empty
             // TODO: Strict empty directory check. But possibly remove to allow overriding in the future and then check for merge conflicts in `src/` (or some other destination folder/file path)?
-            let entries =
-                fs::read_dir(&destination_path).map_err(|_| format!("Could not read directory"))?;
+            let entries = fs::read_dir(&destination_path)
+                .map_err(|_| "Could not read directory".to_string())?;
             let dir_has_content = entries.filter_map(|e| e.ok()).any(|entry| {
                 let name = entry.file_name();
                 // Ignore `.git` directory if it exists
@@ -106,8 +104,7 @@ impl NewCommand {
                 return Err(format!(
                     "Directory '{}' is not empty. Please provide an empty directory or remove existing files to continue",
                     self.name
-                )
-                .into());
+                ));
             }
         }
 
@@ -168,7 +165,7 @@ impl NewCommand {
             matches!(project_config.language, Language::TypeScript) || project_config.routing;
 
         let staging = StagingArea::new(destination_path)
-            .map_err(|_| format!("Failed to initialize staging"))?;
+            .map_err(|_| "Failed to initialize staging".to_string())?;
 
         let path_source_mappings = self.get_template_base_mappings(project_config);
 
@@ -189,27 +186,25 @@ impl NewCommand {
                 let mut json_data: Value = serde_json::from_str(&content)
                     .map_err(|_| format!("Failed to parse JSON in {:?}", target_str))?;
 
-                if project_config.routing {
-                    if let Some(deps) = json_data
+                if project_config.routing
+                    && let Some(deps) = json_data
                         .get_mut("dependencies")
                         .and_then(|v| v.as_object_mut())
-                    {
-                        deps.insert("@lit-labs/router".into(), json!(LIT_ROUTER_VERSION));
-                        deps.insert("urlpattern-polyfill".into(), json!(URL_POLYFILL_VERSION));
-                    }
+                {
+                    deps.insert("@lit-labs/router".into(), json!(LIT_ROUTER_VERSION));
+                    deps.insert("urlpattern-polyfill".into(), json!(URL_POLYFILL_VERSION));
                 }
 
-                if let Some(dev_deps) = json_data
-                    .get_mut("devDependencies")
-                    .and_then(|v| v.as_object_mut())
+                if matches!(project_config.language, Language::TypeScript)
+                    && let Some(dev_deps) = json_data
+                        .get_mut("devDependencies")
+                        .and_then(|v| v.as_object_mut())
                 {
-                    if matches!(project_config.language, Language::TypeScript) {
-                        dev_deps.insert("typescript".into(), json!(TYPESCRIPT_VERSION));
-                    }
+                    dev_deps.insert("typescript".into(), json!(TYPESCRIPT_VERSION));
                 }
 
                 content = serde_json::to_string_pretty(&json_data)
-                    .map_err(|_| format!("Failed to serialize JSON"))?;
+                    .map_err(|_| "Failed to serialize JSON".to_string())?;
             }
 
             // Modifying `index.html`
@@ -247,8 +242,8 @@ impl NewCommand {
         // Atomic commit folder/files
         println!("\n");
         staging
-            .commit(&destination_path)
-            .map_err(|_| format!("Failed to finalize project generation"))?;
+            .commit(destination_path)
+            .map_err(|_| "Failed to finalize project generation".to_string())?;
 
         return Ok(());
     }
@@ -528,12 +523,12 @@ impl Command for NewCommand {
         let project_config: ProjectConfig =
             self.configure_project(ui)
                 .map_err(|_| -> Box<dyn std::error::Error> {
-                    format!("Failed to configure project").into()
+                    "Failed to configure project".to_string().into()
                 })?;
 
         self.generate_files(&destination_path, &project_config)
             .map_err(|_| -> Box<dyn std::error::Error> {
-                format!("Failed to generate files").into()
+                "Failed to generate files".to_string().into()
             })?;
 
         print_success!("\nInitialized project successfully!");

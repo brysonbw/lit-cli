@@ -207,16 +207,16 @@ mod tests {
         let main_content = "console.log('Hello World');";
         let pkg_content = format!(
             r#"{{ "name": "lit-app", "packageManager": "{}" }}"#,
-            package_manager.to_string()
+            package_manager
         );
 
         // Add to staging
         staging.add_file(&main_file, main_content)?;
-        staging.add_file(&pkg_json_file, &pkg_content)?;
+        staging.add_file(pkg_json_file, &pkg_content)?;
 
         // Verify paths exist in staging
         assert!(staging.staging_path().join(&main_file).exists());
-        assert!(staging.staging_path().join(&pkg_json_file).exists());
+        assert!(staging.staging_path().join(pkg_json_file).exists());
 
         // Commit to the target destination
         staging.commit(destination_path)?;
@@ -227,14 +227,14 @@ mod tests {
             "Source file should exist in final path"
         );
         assert!(
-            destination_path.join(&pkg_json_file).exists(),
+            destination_path.join(pkg_json_file).exists(),
             "package.json should exist in final path"
         );
 
         // Verify content is correct in the final destination
         let actual_main_file_content = std::fs::read_to_string(destination_path.join(&main_file))?;
         assert_eq!(actual_main_file_content, main_content);
-        let actual_pkg_file_content = fs::read_to_string(destination_path.join(&pkg_json_file))?;
+        let actual_pkg_file_content = fs::read_to_string(destination_path.join(pkg_json_file))?;
         assert!(actual_pkg_file_content.contains(package_manager.to_string().as_str()));
 
         Ok(())
