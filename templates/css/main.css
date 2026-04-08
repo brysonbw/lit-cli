@@ -1,0 +1,60 @@
+:root {
+  --font-size: 1.125rem;
+  line-height: 1.5;
+
+  color-scheme: light dark;
+  color: var(--white);
+  background-color: #242424;
+  --info: #4b7ce6;
+  --error: #e04b4b;
+  --success: #4be04b;
+  --warning: #e0b44b;
+  --black: #000000;
+  --white: #ffffff;
+  --gray: #999999;
+  --light-gray: #cccccc;
+  --dark-gray: #8a8a8a;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+body {
+  min-height: 100vh;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
+  font-size: var(--font-size);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}

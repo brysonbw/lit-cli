@@ -1,0 +1,60 @@
+'pr::package':
+  - changed-files:
+      - any-glob-to-any-file: ['Cargo.lock', 'Cargo.toml']
+
+'pr::docs':
+  - changed-files:
+      - any-glob-to-any-file: '**.md'
+
+'pr::code':
+  - changed-files:
+      - any-glob-to-any-file: ['src/**/*.rs']
+
+'pr::cli':
+  - changed-files:
+      - any-glob-to-any-file: ['src/cli.rs']
+
+'pr::main':
+  - changed-files:
+      - any-glob-to-any-file: ['src/main.rs']
+
+'pr::types':
+  - changed-files:
+      - any-glob-to-any-file: ['src/types.rs']
+
+'pr::core':
+  - changed-files:
+      - any-glob-to-any-file: ['src/main.rs', 'src/cli.rs', 'src/types.rs']
+
+'pr::commands':
+  - changed-files:
+      - any-glob-to-any-file: ['src/commands/**']
+
+'pr::models':
+  - changed-files:
+      - any-glob-to-any-file: ['src/models/**']
+
+'pr::templates':
+  - changed-files:
+      - any-glob-to-any-file: ['templates/**']
+
+'pr::ui':
+  - changed-files:
+      - any-glob-to-any-file: ['src/ui/**']
+
+'pr::github':
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+'pr::infra':
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+'pr::feature':
+  - head-branch: ['feature', 'feat', 'enhancement', 'add']
+
+'pr::patch':
+  - head-branch: ['update', 'edit']
+
+'pr::fix':
+  - head-branch: ['fix', 'bug']

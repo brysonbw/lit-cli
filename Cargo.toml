@@ -1,0 +1,39 @@
+[package]
+name = "lit-cli"
+version = "0.0.0"
+edition = "2024"
+description = "A command line interface to scaffold and manage Lit projects."
+categories = ["command-line-interface"]
+keywords = [
+  "lit",
+  "lit-cli",
+  "terminal-ui",
+  "cli"
+]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/brysonbw/lit-cli"
+repository = "https://github.com/brysonbw/lit-cli"
+authors = ["Bryson Ward"]
+include = ["src/**/*.rs", "templates/**/*", "README.md", "LICENSE"]
+
+[dependencies]
+chroma-print = "1.0.1"
+clap = { version = "4.5.60", features = ["derive"] }
+dialoguer = "0.12.0"
+rust-embed = "8.11.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["preserve_order"] }
+strum = { version = "0.28", features = ["derive"] }
+tempfile = "3.27.0"
+
+[dev-dependencies]
+mockall = "0.14.0"
+
+[profile.test]
+opt-level = 1
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = true

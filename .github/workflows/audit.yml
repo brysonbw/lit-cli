@@ -1,0 +1,33 @@
+name: Security audit
+
+on:
+    schedule:
+        - cron: "0 0 * * *" # daily
+    push:
+        paths:
+            - "**/Cargo.toml"
+            - "**/Cargo.lock"
+    pull_request:
+        paths:
+            - "**/Cargo.toml"
+            - "**/Cargo.lock"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    security_audit:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install cargo-deny
+              uses: taiki-e/install-action@cargo-deny
+
+            - name: Cache cargo registry
+              uses: Swatinem/rust-cache@v2
+
+            - name: Scan for vulnerabilities
+              run: cargo deny check advisories
